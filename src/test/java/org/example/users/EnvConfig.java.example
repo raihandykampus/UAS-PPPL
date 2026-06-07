@@ -1,0 +1,6 @@
+package org.example.users;
+
+public class EnvConfig {
+//    Pindah user disini
+    public static final String ACTIVE_USER = "afif";
+}

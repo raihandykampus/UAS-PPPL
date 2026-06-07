@@ -1,0 +1,7 @@
+package org.example.users;
+
+public class Roles {
+    public static final String MAHASISWA = "mahasiswa@gmail.com";
+    public static final String ADMIN = "admin@gmail.com";
+    public static final String DOSEN = "dosen@gmail.com";
+}
