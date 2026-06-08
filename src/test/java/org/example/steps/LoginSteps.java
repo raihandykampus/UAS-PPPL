@@ -56,16 +56,16 @@ public class LoginSteps {
     public void verifyDashboardLanding() {
         String expectedName = "";
         if ("mahasiswa".equals(activeRole)) {
-            expectedName = "ABDULLAH AFIF HABIBURROHMAN";
+            expectedName = Roles.NAMA_MAHASISWA;
         } else if ("admin".equals(activeRole)) {
-            expectedName = "ADMIN";
+            expectedName = Roles.NAMA_ADMIN;
         } else if ("dosen".equals(activeRole)) {
-            expectedName = "DOSEN";
+            expectedName = Roles.NAMA_DOSEN;
         }
-        
+
         String currentUrl = loginPage.getCurrentUrl();
         System.out.println("CURRENT URL AT DASHBOARD STEP: " + currentUrl);
-        
+
         boolean isDisplayed = loginPage.isDashboardDisplayed(expectedName);
         if (!isDisplayed) {
             System.err.println("Dashboard verification failed!");

@@ -15,30 +15,32 @@ import org.openqa.selenium.WebElement;
 
 
 public class BasePage {
-    protected WebDriver driver;
-    protected WebDriverWait wait;
+    protected static WebDriver driver;
+    protected static WebDriverWait wait;
 
     public BasePage() {
-        ChromeOptions options = new ChromeOptions();
-        options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
-        options.setExperimentalOption("useAutomationExtension", false);
+        if (driver == null) {
+            ChromeOptions options = new ChromeOptions();
+            options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
+            options.setExperimentalOption("useAutomationExtension", false);
 
-        options.addArguments("--remote-allow-origins=*");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--disable-gpu");
-        options.addArguments("--disable-software-rasterizer");
-        options.addArguments("--remote-debugging-port=9222");
-        options.addArguments("--password-store=basic");
-        options.addArguments("--use-mock-keychain");
-        options.addArguments("--ozone-platform=x11");
+            options.addArguments("--remote-allow-origins=*");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--disable-gpu");
+            options.addArguments("--disable-software-rasterizer");
+            options.addArguments("--remote-debugging-port=9222");
+            options.addArguments("--password-store=basic");
+            options.addArguments("--use-mock-keychain");
+            options.addArguments("--ozone-platform=x11");
 
-        UserConfig activeProfile = UserFactory.getUserProfile();
-        activeProfile.applyChromeProfile(options);
+            UserConfig activeProfile = UserFactory.getUserProfile();
+            activeProfile.applyChromeProfile(options);
 
-        this.driver = new ChromeDriver(options);
-        this.driver.manage().window().maximize();
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+            driver = new ChromeDriver(options);
+            driver.manage().window().maximize();
+            wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        }
     }
 
     protected void clickElement(By locator) {
@@ -70,6 +72,8 @@ public class BasePage {
     public void quitDriver() {
         if (driver != null) {
             driver.quit();
+            driver = null;
+            wait = null;
         }
     }
 

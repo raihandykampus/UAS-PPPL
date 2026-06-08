@@ -1,5 +1,6 @@
 Feature: Google SSO Authentication
 
+  @login
   Scenario: Successful login via Google Single Sign-On
     Given the user is on the application login page
     When the user selects their active "mahasiswa" credentials

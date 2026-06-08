@@ -4,4 +4,7 @@ public class Roles {
     public static final String MAHASISWA = "mahasiswa@gmail.com";
     public static final String ADMIN = "admin@gmail.com";
     public static final String DOSEN = "dosen@gmail.com";
+    public static final String NAMA_MAHASISWA = "MAHASISWA";
+    public static final String NAMA_ADMIN = "ADMIN";
+    public static final String NAMA_DOSEN = "DOSEN";
 }
