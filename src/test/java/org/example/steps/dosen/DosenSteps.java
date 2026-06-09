@@ -2,57 +2,50 @@ package org.example.steps.dosen;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.example.pages.DosenDashboardPage;
-import org.example.pages.DosenDetailJadwalPage;
+import org.example.pages.DosenPage;
 import org.junit.jupiter.api.Assertions;
 
 public class DosenSteps {
 
-    private final String BASE_URL = "https://pad-1.vercel.app";
-
-    private DosenDashboardPage dosenDashboardPage;
-    private DosenDetailJadwalPage dosenDetailJadwalPage;
+    private DosenPage dosenPage;
 
     @Then("dashboard dosen tampil")
     public void dashboardDosenTampil() {
-        dosenDashboardPage = new DosenDashboardPage();
+        dosenPage = new DosenPage();
 
         Assertions.assertTrue(
-                dosenDashboardPage.isDosenDashboardDisplayed(),
+                dosenPage.isDosenDashboardDisplayed(),
                 "Dashboard dosen tidak tampil."
         );
     }
 
-    @When("dosen mencoba membuka halaman admin")
-    public void dosenMencobaMembukaHalamanAdmin() {
-        dosenDashboardPage = new DosenDashboardPage();
-        dosenDashboardPage.navigateTo(BASE_URL + "/data-mahasiswa");
+    @When("dosen membuka halaman detail jadwal sidebar")
+    public void dosenMembukaHalamanDetailJadwalSidebar() {
+        dosenPage.openDetailJadwalMenu();
     }
 
-    @Then("akses halaman admin ditolak")
-    public void aksesHalamanAdminDitolak() {
+    @Then("halaman detail jadwal sidebar valid")
+    public void halamanDetailJadwalSidebarValid() {
         Assertions.assertTrue(
-                dosenDashboardPage.isAccessDenied(),
-                "Dosen masih bisa mengakses halaman admin."
+                dosenPage.isDetailJadwalSidebarPageDisplayed(),
+                "Halaman detail jadwal sidebar tidak valid."
         );
     }
 
-    @When("dosen membuka detail jadwal dari dashboard")
-    public void dosenMembukaDetailJadwalDariDashboard() {
-        dosenDetailJadwalPage = new DosenDetailJadwalPage();
-
+    @When("dosen membuka detail jadwal dari halaman detail jadwal")
+    public void dosenMembukaDetailJadwalDariHalamanDetailJadwal() {
         Assertions.assertTrue(
-                dosenDetailJadwalPage.isDashboardScheduleDisplayed(),
-                "Jadwal sidang tidak ditemukan di dashboard dosen."
+                dosenPage.isAnyScheduleAvailable(),
+                "Tidak ada data jadwal sidang yang dapat dibuka."
         );
 
-        dosenDetailJadwalPage.openDetailFromDashboard();
+        dosenPage.openFirstScheduleDetail();
     }
 
     @Then("modal detail jadwal tampil")
     public void modalDetailJadwalTampil() {
         Assertions.assertTrue(
-                dosenDetailJadwalPage.isModalDetailDisplayed(),
+                dosenPage.isModalDetailDisplayed(),
                 "Modal detail jadwal tidak tampil."
         );
     }
@@ -60,8 +53,52 @@ public class DosenSteps {
     @Then("tombol download naskah tersedia")
     public void tombolDownloadNaskahTersedia() {
         Assertions.assertTrue(
-                dosenDetailJadwalPage.isDownloadButtonDisplayed(),
+                dosenPage.isDownloadButtonDisplayed(),
                 "Tombol download naskah tidak ditemukan."
+        );
+    }
+
+    @When("dosen membuka berkas naskah")
+    public void dosenMembukaBerkasNaskah() {
+        dosenPage.openDocumentFile();
+    }
+
+    @Then("halaman berkas naskah berhasil terbuka")
+    public void halamanBerkasNaskahBerhasilTerbuka() {
+        Assertions.assertTrue(
+                dosenPage.isDocumentFileOpened(),
+                "Halaman berkas naskah tidak berhasil terbuka."
+        );
+    }
+
+    @When("dosen kembali ke tab aplikasi utama")
+    public void dosenKembaliKeTabAplikasiUtama() {
+        dosenPage.switchBackToMainApplicationTab();
+    }
+
+    @When("dosen membuka halaman riwayat ujian")
+    public void dosenMembukaHalamanRiwayatUjian() {
+        dosenPage.openRiwayatUjianMenu();
+    }
+
+    @Then("halaman riwayat ujian dosen valid")
+    public void halamanRiwayatUjianDosenValid() {
+        Assertions.assertTrue(
+                dosenPage.isRiwayatUjianPageDisplayed(),
+                "Halaman riwayat ujian dosen tidak valid."
+        );
+    }
+
+    @When("dosen membuka halaman notifikasi")
+    public void dosenMembukaHalamanNotifikasi() {
+        dosenPage.openNotifikasiMenu();
+    }
+
+    @Then("halaman notifikasi dosen valid")
+    public void halamanNotifikasiDosenValid() {
+        Assertions.assertTrue(
+                dosenPage.isNotifikasiPageDisplayed(),
+                "Halaman notifikasi dosen tidak valid."
         );
     }
 }

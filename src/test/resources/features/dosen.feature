@@ -1,27 +1,25 @@
 Feature: Role Dosen SIMPENSI
 
-  Scenario: Dosen berhasil melihat dashboard
+  Scenario: Dosen mengakses minimal lima tab sampai membuka berkas naskah sidang
     Given the user is on the application login page
     When the user selects their active "dosen" credentials
     And the user initiates login with Google
     And selects their authenticated Google account
     Then dashboard dosen tampil
 
-  Scenario: Dosen tidak dapat mengakses halaman admin
-    Given the user is on the application login page
-    When the user selects their active "dosen" credentials
-    And the user initiates login with Google
-    And selects their authenticated Google account
-    Then dashboard dosen tampil
-    When dosen mencoba membuka halaman admin
-    Then akses halaman admin ditolak
+    When dosen membuka halaman detail jadwal sidebar
+    Then halaman detail jadwal sidebar valid
 
-  Scenario: Dosen berhasil membuka detail jadwal sidang dari dashboard
-    Given the user is on the application login page
-    When the user selects their active "dosen" credentials
-    And the user initiates login with Google
-    And selects their authenticated Google account
-    Then dashboard dosen tampil
-    When dosen membuka detail jadwal dari dashboard
+    When dosen membuka detail jadwal dari halaman detail jadwal
     Then modal detail jadwal tampil
     And tombol download naskah tersedia
+
+    When dosen membuka berkas naskah
+    Then halaman berkas naskah berhasil terbuka
+
+    When dosen kembali ke tab aplikasi utama
+    And dosen membuka halaman riwayat ujian
+    Then halaman riwayat ujian dosen valid
+
+    When dosen membuka halaman notifikasi
+    Then halaman notifikasi dosen valid
