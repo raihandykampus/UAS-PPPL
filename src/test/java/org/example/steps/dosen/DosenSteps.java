@@ -1,32 +1,18 @@
-package org.example.steps;
+package org.example.steps.dosen;
 
-import io.cucumber.java.After;
-import io.cucumber.java.en.*;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.example.pages.DosenDashboardPage;
 import org.junit.jupiter.api.Assertions;
 
 public class DosenSteps {
 
     private final String BASE_URL = "https://pad-1.vercel.app";
-
     private DosenDashboardPage dosenDashboardPage;
-
-    @Given("dosen membuka aplikasi SIMPENSI")
-    public void dosenMembukaAplikasiSIMPENSI() {
-        dosenDashboardPage = new DosenDashboardPage();
-        dosenDashboardPage.navigateTo(BASE_URL + "/dashboard");
-    }
-
-    @Then("dosen melihat dashboard dosen")
-    public void dosenMelihatDashboardDosen() {
-        Assertions.assertTrue(
-                dosenDashboardPage.isDashboardDisplayed(),
-                "Dashboard dosen tidak tampil. Pastikan Chrome profile sudah login sebagai akun dosen."
-        );
-    }
 
     @When("dosen mencoba membuka halaman admin")
     public void dosenMencobaMembukaHalamanAdmin() {
+        dosenDashboardPage = new DosenDashboardPage();
         dosenDashboardPage.navigateTo(BASE_URL + "/data-mahasiswa");
     }
 
@@ -36,12 +22,5 @@ public class DosenSteps {
                 dosenDashboardPage.isAccessDenied(),
                 "Dosen masih bisa mengakses halaman admin."
         );
-    }
-
-    @After
-    public void tearDown() {
-        if (dosenDashboardPage != null) {
-            dosenDashboardPage.quitDriver();
-        }
     }
 }
