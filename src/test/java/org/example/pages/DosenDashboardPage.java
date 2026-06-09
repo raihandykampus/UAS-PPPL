@@ -6,6 +6,16 @@ public class DosenDashboardPage extends BasePage {
         super();
     }
 
+    public boolean isDosenDashboardDisplayed() {
+        String currentUrl = getCurrentUrl().toLowerCase();
+        String pageText = getPageText().toLowerCase();
+
+        return currentUrl.contains("/dashboard")
+                && pageText.contains("selamat datang")
+                && pageText.contains("dimeees archive")
+                && pageText.contains("dosen");
+    }
+
     public boolean isAccessDenied() {
         String currentUrl = getCurrentUrl().toLowerCase();
         String pageText = getPageText().toLowerCase();
