@@ -3,7 +3,9 @@ package org.example.pages;
 import org.example.users.UserConfig;
 import org.example.users.UserFactory;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -17,6 +19,7 @@ import org.openqa.selenium.WebElement;
 public class BasePage {
     protected static WebDriver driver;
     protected static WebDriverWait wait;
+    private static final int DEBUG_SOURCE_LENGTH = 1000;
 
     public BasePage() {
         if (driver == null) {
@@ -47,6 +50,14 @@ public class BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
     }
 
+    protected WebElement waitForVisible(By locator) {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    protected WebElement waitForClickable(By locator) {
+        return wait.until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
     protected boolean isElementDisplayed(By locator) {
         try {
             return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).isDisplayed();
@@ -63,6 +74,44 @@ public class BasePage {
             }
         } catch (Exception ignored) {}
         return false;
+    }
+
+    protected boolean waitForAnyVisible(By... locators) {
+        try {
+            wait.until(webDriver -> {
+                for (By locator : locators) {
+                    List<WebElement> elements = webDriver.findElements(locator);
+                    for (WebElement element : elements) {
+                        if (element.isDisplayed()) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            });
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    protected void waitForDocumentReady() {
+        try {
+            wait.until(webDriver -> ((JavascriptExecutor) webDriver)
+                    .executeScript("return document.readyState")
+                    .equals("complete"));
+        } catch (TimeoutException e) {
+            System.err.println("Document readyState did not become complete. Current URL: " + getCurrentUrl());
+        }
+    }
+
+    public boolean isRedirectedToLogin() {
+        String currentUrl = getCurrentUrl().toLowerCase();
+        return currentUrl.contains("/login") || currentUrl.contains("accounts.google.com");
+    }
+
+    public String getTitle() {
+        return driver.getTitle();
     }
 
     public String getCurrentUrl() {
@@ -83,6 +132,32 @@ public class BasePage {
 
     public String getPageSource() {
         return driver.getPageSource();
+    }
+
+    public String getPageSourceSnippet() {
+        String source = getPageSource();
+        if (source == null || source.isBlank()) {
+            return "[empty page source]";
+        }
+
+        String normalized = source.replaceAll("\\s+", " ").trim();
+        if (normalized.length() <= DEBUG_SOURCE_LENGTH) {
+            return normalized;
+        }
+
+        return normalized.substring(0, DEBUG_SOURCE_LENGTH) + "...";
+    }
+
+    public void printDebugSnapshot(String label) {
+        System.out.println("========== DEBUG: " + label + " ==========");
+        System.out.println("Current URL : " + getCurrentUrl());
+        System.out.println("Page title  : " + getTitle());
+        System.out.println("Source head : " + getPageSourceSnippet());
+        System.out.println("==========================================");
+    }
+
+    public String getLoginPreconditionMessage() {
+        return "Precondition gagal: admin belum login pada Chrome profile test.";
     }
 
     public String getPageText() {

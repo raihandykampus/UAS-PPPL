@@ -10,7 +10,7 @@ import io.cucumber.junit.platform.engine.Constants;
 @SelectClasspathResource("features")
 @ConfigurationParameter(
         key = Constants.GLUE_PROPERTY_NAME,
-        value = "org.example.steps"
+        value = "org.example.steps.admin"
 )
 @ConfigurationParameter(
         key = Constants.PLUGIN_PROPERTY_NAME,
