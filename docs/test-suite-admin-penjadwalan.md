@@ -1,0 +1,22 @@
+# Test Suite Admin Penjadwalan SIMPENSI
+
+Scope pengujian ini mencakup user flow end-to-end role Admin Penjadwalan pada aplikasi SIMPENSI. Login admin dianggap sebagai precondition menggunakan Chrome profile test yang sudah terautentikasi.
+
+| Test Case ID | Scenario | Halaman | Preconditions | Test Steps | Test Data | Expected Result | Actual Result | Status | Test Method |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TC-001 | Dashboard tampil | Dashboard | Admin sudah login pada Chrome profile test | Buka `https://pad-1.vercel.app/dashboard`; tunggu halaman selesai dimuat; validasi teks Dashboard/Admin | Role admin valid | Halaman dashboard admin berhasil tampil tanpa redirect ke login | Dashboard admin tampil | Passed | Equivalence Partitioning, Positive Test |
+| TC-002 | Pengajuan tampil | Pengajuan | Admin sudah login pada Chrome profile test | Buka `https://pad-1.vercel.app/pengajuan`; tunggu daftar pengajuan; validasi judul/data/tombol Detail | Data pengajuan tersedia | Daftar pengajuan berhasil ditampilkan | Daftar pengajuan tampil | Passed | Equivalence Partitioning, Positive Test |
+| TC-003 | Detail pengajuan tampil | Pengajuan, Detail Pengajuan | Admin sudah login dan halaman Pengajuan dapat diakses | Buka halaman Pengajuan; klik Detail pada data mahasiswa; validasi konten detail | Data mahasiswa `Dimas Satriaa`, status `DIJADWALKAN` | Detail pengajuan menampilkan informasi verifikasi/status/tombol terkait | Detail pengajuan tampil | Passed | Equivalence Partitioning, Positive Test |
+| TC-004 | Form Penjadwalan tampil | Form Penjadwalan | Admin sudah login pada Chrome profile test | Buka `https://pad-1.vercel.app/form-penjadwalan`; tunggu halaman; validasi judul Form Penjadwalan atau empty state | Pengajuan siap dijadwalkan atau empty state | Halaman formulir penjadwalan berhasil ditampilkan | Form Penjadwalan tampil | Passed | Equivalence Partitioning, Positive Test |
+| TC-005 | Kalender Utama menampilkan event Ujian TA | Kalender Utama | Admin sudah login pada Chrome profile test | Buka `https://pad-1.vercel.app/kalender-utama`; tunggu kalender; validasi event `Ujian TA` | Event jadwal ujian | Event Ujian TA tampil pada kalender utama | Event Ujian TA tampil | Passed | Equivalence Partitioning, Positive Test |
+| TC-006 | Form Penjadwalan tanpa data siap dijadwalkan | Form Penjadwalan | Admin sudah login dan tidak ada pengajuan dengan status siap dijadwalkan | Buka halaman Form Penjadwalan; amati pesan empty state | Partisi data kosong: 0 pengajuan siap dijadwalkan | Sistem menampilkan informasi kosong yang jelas dan tidak error | Halaman menampilkan `Tidak ada pengajuan yang siap dijadwalkan` | Passed with Note | Boundary Value Analysis, Negative Test |
+| TC-007 | Status DIJADWALKAN tidak boleh diverifikasi ulang | Detail Pengajuan | Admin sudah login dan pengajuan berada pada status `DIJADWALKAN` | Buka detail pengajuan berstatus DIJADWALKAN; periksa tombol Verifikasi/Tolak | Partisi status final: DIJADWALKAN | Tombol Verifikasi/Tolak tidak tampil atau disabled | Tombol Verifikasi/Tolak masih tampil | Failed - Bug Found | Equivalence Partitioning, Negative Test |
+| TC-008 | Jadwal tampil di Kalender Utama | Kalender Utama | Admin sudah login dan jadwal ujian telah dibuat/diproses | Buka Kalender Utama; cari jadwal ujian yang seharusnya muncul | Batas minimal jadwal: 1 event | Minimal satu jadwal ujian tampil di Kalender Utama | Event Ujian TA tampil | Passed | Boundary Value Analysis, Positive Test |
+| TC-009 | Melihat daftar ruangan | Manajemen Ruangan | Admin sudah login pada Chrome profile test | Buka `https://pad-1.vercel.app/ruangan`; validasi judul Manajemen Ruangan; validasi tabel dan data ruangan | Data ruangan: HU207, HU208, Lab RPL | Daftar ruangan berhasil ditampilkan dan memuat HU207, HU208, serta Lab RPL | Daftar ruangan tampil | Passed | Equivalence Partitioning, Positive Test |
+
+## Catatan Metode
+
+- Equivalence Partitioning digunakan untuk membagi data/status admin menjadi kelas valid seperti admin login, halaman tersedia, data pengajuan tersedia, dan status pengajuan tertentu.
+- Boundary Value Analysis digunakan pada kondisi batas jumlah data, terutama 0 data siap dijadwalkan dan minimal 1 jadwal/event pada kalender.
+- Positive Test mencakup akses halaman utama flow admin yang diharapkan berhasil.
+- Negative Test mencakup kondisi status atau data yang seharusnya membatasi aksi admin.

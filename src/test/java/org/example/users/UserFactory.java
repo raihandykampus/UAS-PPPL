@@ -7,6 +7,8 @@ public class UserFactory {
         switch (currentUser.toLowerCase()) {
             case "afif":
                 return new Afif();
+            case "dimas":
+                return new Dimas();
             case "siapa":
                 System.out.println("siapa profile selected (Stub)");
 //                return new Siapa();
