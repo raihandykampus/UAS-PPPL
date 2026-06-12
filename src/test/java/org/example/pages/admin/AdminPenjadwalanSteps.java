@@ -1,4 +1,4 @@
-package org.example.steps.admin;
+package org.example.pages.admin;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
