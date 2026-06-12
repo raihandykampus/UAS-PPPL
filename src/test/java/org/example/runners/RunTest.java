@@ -8,13 +8,15 @@ import io.cucumber.junit.platform.engine.Constants;
 
 @Suite
 @SelectClasspathResource("features")
+@SelectClasspathResource("features_old")
 @ConfigurationParameter(
         key = Constants.GLUE_PROPERTY_NAME,
-        value = "org.example.steps.admin"
+        value = "org.example.steps, org.example.steps.dosen"
 )
 @ConfigurationParameter(
         key = Constants.PLUGIN_PROPERTY_NAME,
-        value = "pretty, html:target/cucumber-report.html, json:target/cucumber-report.json"
+        value = "pretty, html:target/cucumber-report.html"
 )
+
 public class RunTest {
 }

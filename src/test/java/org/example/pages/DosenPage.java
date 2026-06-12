@@ -1,8 +1,6 @@
 package org.example.pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -26,14 +24,12 @@ public class DosenPage extends BasePage {
 
             boolean correctUrl = currentUrl.contains("/dashboard");
 
-            boolean hasDashboardIdentity =
-                    pageText.contains("selamat datang") &&
-                            pageText.contains("dosen");
+            boolean hasDashboardIdentity = pageText.contains("selamat datang") &&
+                    pageText.contains("dosen");
 
-            boolean hasDashboardContent =
-                    pageText.contains("ujian mendatang") ||
-                            pageText.contains("mahasiswa dibimbing") ||
-                            pageText.contains("detail jadwal");
+            boolean hasDashboardContent = pageText.contains("ujian mendatang") ||
+                    pageText.contains("mahasiswa dibimbing") ||
+                    pageText.contains("detail jadwal");
 
             return correctUrl && hasDashboardIdentity && hasDashboardContent;
 
@@ -62,9 +58,8 @@ public class DosenPage extends BasePage {
             boolean hasTitle = isElementDisplayed(DETAIL_JADWAL_TITLE);
             boolean hasTable = isElementDisplayed(TABLE_CONTAINER);
 
-            boolean hasPageContent =
-                    pageText.contains("detail jadwal") &&
-                            pageText.contains("lihat jadwal ujian");
+            boolean hasPageContent = pageText.contains("detail jadwal") &&
+                    pageText.contains("lihat jadwal ujian");
 
             return correctUrl && hasTitle && hasTable && hasPageContent;
 
@@ -120,10 +115,9 @@ public class DosenPage extends BasePage {
             boolean hasModalHeader = isElementDisplayed(MODAL_HEADER);
             boolean hasCloseButton = isElementDisplayed(CLOSE_BUTTON);
 
-            boolean hasModalText =
-                    pageText.contains("berita acara") ||
-                            pageText.contains("data mahasiswa") ||
-                            pageText.contains("informasi jadwal");
+            boolean hasModalText = pageText.contains("berita acara") ||
+                    pageText.contains("data mahasiswa") ||
+                    pageText.contains("informasi jadwal");
 
             return hasModalHeader && hasCloseButton && hasModalText;
 
@@ -142,13 +136,11 @@ public class DosenPage extends BasePage {
             scrollModalUntilDocumentSectionVisible();
 
             WebElement download = wait.until(
-                    ExpectedConditions.visibilityOfElementLocated(DOWNLOAD_BUTTON)
-            );
+                    ExpectedConditions.visibilityOfElementLocated(DOWNLOAD_BUTTON));
 
             ((JavascriptExecutor) driver).executeScript(
                     "arguments[0].scrollIntoView({block: 'center'});",
-                    download
-            );
+                    download);
 
             sleep(300);
 
@@ -169,13 +161,11 @@ public class DosenPage extends BasePage {
             scrollModalUntilDocumentSectionVisible();
 
             WebElement download = wait.until(
-                    ExpectedConditions.elementToBeClickable(DOWNLOAD_BUTTON)
-            );
+                    ExpectedConditions.elementToBeClickable(DOWNLOAD_BUTTON));
 
             ((JavascriptExecutor) driver).executeScript(
                     "arguments[0].scrollIntoView({block: 'center'});",
-                    download
-            );
+                    download);
 
             sleep(300);
 
@@ -308,10 +298,9 @@ public class DosenPage extends BasePage {
             boolean hasTitle = isElementDisplayed(RIWAYAT_UJIAN_TITLE);
             boolean hasTable = isElementDisplayed(TABLE_CONTAINER);
 
-            boolean hasPageStructure =
-                    pageText.contains("riwayat ujian") &&
-                            pageText.contains("nama mahasiswa") &&
-                            pageText.contains("judul tugas akhir");
+            boolean hasPageStructure = pageText.contains("riwayat ujian") &&
+                    pageText.contains("nama mahasiswa") &&
+                    pageText.contains("judul tugas akhir");
 
             return correctUrl && hasTitle && hasTable && hasPageStructure;
 
@@ -346,13 +335,10 @@ public class DosenPage extends BasePage {
             boolean correctUrl = currentUrl.contains("/riwayat-pengajuan");
             boolean hasTitle = isElementDisplayed(NOTIFIKASI_TITLE);
 
-            boolean hasNotificationContent =
-                    !firstNotificationText.trim().isEmpty()
-                            && (
-                            firstNotificationText.contains("pengajuan") ||
-                                    firstNotificationText.contains("dijadwalkan") ||
-                                    firstNotificationText.contains("disetujui")
-                    );
+            boolean hasNotificationContent = !firstNotificationText.trim().isEmpty()
+                    && (firstNotificationText.contains("pengajuan") ||
+                            firstNotificationText.contains("dijadwalkan") ||
+                            firstNotificationText.contains("disetujui"));
 
             return correctUrl && hasTitle && hasNotificationContent;
 
@@ -411,8 +397,7 @@ public class DosenPage extends BasePage {
 
                 ((JavascriptExecutor) driver).executeScript(
                         "arguments[0].click();",
-                        closeButtons.get(0)
-                );
+                        closeButtons.get(0));
 
                 wait.until(ExpectedConditions.invisibilityOfElementLocated(CLOSE_BUTTON));
 
@@ -442,16 +427,14 @@ public class DosenPage extends BasePage {
 
                 ((JavascriptExecutor) driver).executeScript(
                         "arguments[0].scrollTop = arguments[0].scrollTop + 500;",
-                        modalScroll
-                );
+                        modalScroll);
             } catch (Exception e) {
                 ((JavascriptExecutor) driver).executeScript(
                         "document.querySelectorAll('*').forEach(el => {" +
                                 "if (el.scrollHeight > el.clientHeight) {" +
                                 "el.scrollTop = el.scrollTop + 500;" +
                                 "}" +
-                                "});"
-                );
+                                "});");
             }
 
             sleep(300);
