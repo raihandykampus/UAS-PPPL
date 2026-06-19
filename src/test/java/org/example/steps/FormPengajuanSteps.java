@@ -40,7 +40,6 @@ public class FormPengajuanSteps {
 
     @Then("a form validation alert badge should be displayed on screen")
     public void verifyValidationAlertBadgeDisplayed() {
-        // 1. Cek Pop-up Dialog Radix UI (untuk berkas besar / salah format)
         String dialogError = formPage.getDialogErrorMessage();
         if (!dialogError.isEmpty()) {
             System.out.println("Captured Radix UI Error Message: " + dialogError);
@@ -50,14 +49,12 @@ public class FormPengajuanSteps {
             return;
         }
 
-        // 2. Cek Validasi Native HTML5 Browser (untuk skenario judul kosong)
         if (formPage.isJudulHtml5Invalid()) {
             System.out.println("Success detected: HTML5 Browser Blocked submission due to missing Title!");
             Assertions.assertTrue(true);
             return;
         }
 
-        // 3. Fallback terakhir: cek segitiga merah biasa
         boolean isTriangleVisible = formPage.isAlertTriangleDisplayed();
         Assertions.assertTrue(isTriangleVisible, "Expected validation warning was not found anywhere (Radix Dialog, HTML5 Validation, or Alert Triangle)!");
     }
