@@ -116,3 +116,22 @@ Fungsi: Logika operasional fungsional halaman profil.
 Isi:
   - Fungsi Verifikasi Data: Membaca teks asli isi form (getAttribute("value")) lalu membandingkannya dengan data baru pasca disimpan.
   - Deteksi Segitiga Eror: Memeriksa keberadaan ikon peringatan visual saat pengujian skenario kosong dilakukan.
+
+## Form Pengajuan Sidang
+
+1. Gherkin (form_pengajuan.feature)
+Fungsi: Skenario pengujian alur Mahasiswa melakukan pendaftaran sidang tugas akhir.
+Isi: Alur sukses mengajukan sidang dengan mengisi form judul TA, memilih dosen pembimbing, serta mengunggah berkas naskah TA format PDF. Serta skenario pengujian negative test jika ada berkas yang belum diunggah atau judul kosong.
+
+2. Kode Langkah-langkah (FormPengajuanSteps.java)
+Fungsi: Menghubungkan tahapan teks Gherkin dengan logika eksekusi di browser untuk pendaftaran sidang.
+Isi: Mengarahkan navigasi ke menu form pengajuan, mengetikkan Judul TA, memilih nama dosen pembimbing dari dropdown, memicu aksi unggah (upload) berkas PDF naskah ke sistem, menekan tombol submit pendaftaran, dan melakukan assertion status pengajuan berubah menjadi "Menunggu Verifikasi".
+
+3. Kode Locators (PengajuanSidangLocators.java)
+Fungsi: Kamus penyimpan alamat ID, Class, nama atribut, atau elemen XPath khusus pada halaman form pendaftaran.
+Isi: Elemen penunjuk kotak input judul Tugas Akhir, elemen tombol dropdown pilihan dosen pembimbing, elemen input file tersembunyi (input[type='file']) untuk mengunggah naskah PDF, tombol submit kirim berkas, serta locator teks status pengajuan di dashboard mahasiswa.
+
+4. Halaman Pengajuan Sidang (FormPengajuanPage.java)
+Fungsi: Logika operasional fungsional interaksi elemen pada halaman form pengajuan sidang.
+Isi: * Fungsi Pengisian Form dan Upload: Mengotomatiskan pengetikan judul, metode penyuntikan path file lokal (sendKeys) agar Selenium bisa mengunggah berkas PDF ke cloud storage (Supabase).
+Verifikasi Pengajuan: Memastikan setelah tombol submit ditekan, form berhasil terkirim dan sistem memunculkan indikator sukses atau melarang pengiriman jika dokumen wajib belum lengkap.
