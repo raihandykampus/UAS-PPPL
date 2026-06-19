@@ -6,7 +6,7 @@ README.md untuk UAS kelompok 12. Beranggotakan:
 3. Dimas Satria Widjatmiko (24/541372/SV/24899) B1
 4. Abdullah Afif Habiburrohman (24/537611/SV/24441) B2
 
-## 🚀 Test Case
+## Test Case
 
 Test Case yang ada:
 1. Autentikasi (Login/logout) & Google SSO: Oleh Abdullah Afif
@@ -15,11 +15,11 @@ Test Case yang ada:
 4. Manajemen : Oleh
 5. Manajemen : Oleh
 
-## 🏗️ Arsitektur
+## Arsitektur
 
 Proyek ini menggunakan Behavior-Driven Development (BDD) dengan Cucumber dan Page Object Model (POM)
 
-## 📂 Direktori
+## Direktori
 
 ```text
 src/test/
