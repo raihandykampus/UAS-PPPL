@@ -15,10 +15,8 @@ public class FormPengajuanPage extends BasePage {
 
     public void navigateToFormPengajuan() {
         System.out.println("Navigating to Form Pengajuan page...");
-        // 1. Wait for and click the Form Pengajuan link in the sidebar
         clickElement(FORM_PENGAJUAN_MENU_LINK);
 
-        // 2. Wait until url contains form-pengajuan
         wait.until(ExpectedConditions.urlContains("/form-pengajuan"));
         System.out.println("Landed on Form Pengajuan page: " + getCurrentUrl());
     }
@@ -31,24 +29,20 @@ public class FormPengajuanPage extends BasePage {
     }
 
     public void uploadFile(String fileName) {
-        // Resolve absolute path
         String workingDir = System.getProperty("user.dir");
         String relativePath = "src/test/resources/upload_files/" + fileName;
         File file = new File(workingDir, relativePath);
 
         if (!file.exists()) {
-            // Try absolute path direct
             file = new File(fileName);
         }
 
         String absolutePath = file.getAbsolutePath();
         System.out.println("Uploading file from resolved path: " + absolutePath);
 
-        // Find input file and send path keys
         WebElement fileInput = driver.findElement(FILE_INPUT);
         fileInput.sendKeys(absolutePath);
 
-        // Dispatch React change event via JS executor
         System.out.println("Dispatching change event via JavaScript executor...");
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript(
@@ -56,7 +50,6 @@ public class FormPengajuanPage extends BasePage {
                         "var event = new Event('change', { bubbles: true });" +
                         "input.dispatchEvent(event);");
 
-        // Brief sleep to let React state catch up
         try {
             Thread.sleep(1000);
         } catch (InterruptedException ignored) {
@@ -67,7 +60,6 @@ public class FormPengajuanPage extends BasePage {
         System.out.println("Clicking Submit form button...");
         clickElement(SUBMIT_BUTTON);
 
-        // Wait for page transition / success card loading
         try {
             Thread.sleep(3000);
         } catch (InterruptedException ignored) {
