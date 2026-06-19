@@ -18,6 +18,8 @@ public final class SettingsLocators {
     public static final By PRODI_DROPDOWN_TRIGGER = By.xpath("//label[@for='prodi']/following-sibling::button");
     public static final By DOSEN_DROPDOWN_TRIGGER = By.xpath("//label[@for='dosenPembimbing']/following-sibling::button");
 
+    public static final By ALERT_TRIANGLE_ICON = By.cssSelector("svg.lucide-triangle-alert, svg[class*='lucide-triangle-alert']");
+
     public static final By SAVE_SETTINGS_BUTTON = By.xpath("//button[@type='submit' and contains(., 'Save Settings')]");
 
     public static By selectOption(String optionText) {

@@ -1,6 +1,7 @@
 package org.example.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import static org.example.pages.locators.LoginLocators.SIDEBAR_FOOTER;
@@ -22,8 +23,18 @@ public class SettingsPage extends BasePage {
 
     public void fillTextField(By locator, String value) {
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        element.clear();
-        element.sendKeys(value);
+
+        element.click();
+
+        element.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        element.sendKeys(Keys.BACK_SPACE);
+
+        if (value != null && !value.isEmpty()) {
+            element.sendKeys(value);
+        } else {
+            element.sendKeys(" ");
+            element.sendKeys(Keys.BACK_SPACE);
+        }
     }
 
     public void selectDropdownOption(By triggerLocator, String optionText) {
@@ -51,6 +62,10 @@ public class SettingsPage extends BasePage {
         try {
             Thread.sleep(3000);
         } catch (InterruptedException ignored) {}
+    }
+
+    public boolean isAlertTriangleDisplayed() {
+        return isElementDisplayed(ALERT_TRIANGLE_ICON);
     }
 
     public boolean isProfileUpdatedSuccessfully(String name, String nim, String prodi, String telepon, String dosen) {
