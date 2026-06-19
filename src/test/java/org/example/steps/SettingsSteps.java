@@ -45,6 +45,21 @@ public class SettingsSteps {
         System.out.println("Profile settings successfully updated and verified!");
     }
 
+    @When("the user attempts to save profile with name {string}, nim {string}, prodi {string}, telepon {string}, and dosen pembimbing {string}")
+    public void userAttemptsToSaveInvalidProfile(String name, String nim, String prodi, String telepon, String dosen) {
+        if (settingsPage == null) {
+            settingsPage = new SettingsPage();
+        }
+        settingsPage.updateProfileDetails(name, nim, prodi, telepon, dosen);
+    }
+
+    @Then("a validation alert badge should be displayed on screen")
+    public void verifyValidationAlertBadge() {
+        boolean isAlertVisible = settingsPage.isAlertTriangleDisplayed();
+
+        Assertions.assertTrue(isAlertVisible, "Expected validation warning triangle icon was not displayed on the form!");
+    }
+
     @After("@settings")
     public void tearDown(Scenario scenario) {
         if (settingsPage != null) {

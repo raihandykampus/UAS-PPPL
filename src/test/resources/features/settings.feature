@@ -7,3 +7,16 @@ Feature: Edit Profile Settings
     And the user updates their profile details with name "Afif", nim "24/537611/SV/24441", prodi "Teknologi Rekayasa Perangkat Lunak", telepon "085111111111", and dosen pembimbing "Wawan Gorengan"
     And the user saves the settings
     Then the profile settings should be updated successfully
+
+  Scenario Outline: User leaves a mandatory field blank and sees an alert error
+    Given the user is logged in to the dashboard with "mahasiswa" credentials
+    When the user navigates to the Edit Profile page
+    And the user attempts to save profile with name "<name>", nim "<nim>", prodi "Teknologi Rekayasa Perangkat Lunak", telepon "<telepon>", and dosen pembimbing "Wawan Gorengan"
+    And the user saves the settings
+    Then a validation alert badge should be displayed on screen
+
+    Examples:
+      | name  | nim                | telepon      |
+      |       | 24/537611/SV/24441 | 085111111111 |
+      | Afif  |                    | 085111111111 |
+      | Afif  | 24/537611/SV/24441 |              |

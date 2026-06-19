@@ -1,9 +1,10 @@
 package org.example.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-
 import java.io.File;
 import static org.example.pages.locators.FormPengajuanLocators.*;
 
@@ -14,49 +15,42 @@ public class FormPengajuanPage extends BasePage {
     }
 
     public void navigateToFormPengajuan() {
-        System.out.println("Navigating to Form Pengajuan page...");
-        // 1. Wait for and click the Form Pengajuan link in the sidebar
         clickElement(FORM_PENGAJUAN_MENU_LINK);
-
-        // 2. Wait until url contains form-pengajuan
         wait.until(ExpectedConditions.urlContains("/form-pengajuan"));
-        System.out.println("Landed on Form Pengajuan page: " + getCurrentUrl());
     }
 
     public void fillJudul(String judulText) {
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(JUDUL_INPUT));
-        element.clear();
-        element.sendKeys(judulText);
-        System.out.println("Filled Judul Tugas Akhir: " + judulText);
+        element.click();
+        element.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        element.sendKeys(Keys.BACK_SPACE);
+
+        if (judulText != null && !judulText.isEmpty()) {
+            element.sendKeys(judulText);
+        } else {
+            element.sendKeys(" ");
+            element.sendKeys(Keys.BACK_SPACE);
+        }
     }
 
     public void uploadFile(String fileName) {
-        // Resolve absolute path
         String workingDir = System.getProperty("user.dir");
         String relativePath = "src/test/resources/upload_files/" + fileName;
         File file = new File(workingDir, relativePath);
 
         if (!file.exists()) {
-            // Try absolute path direct
             file = new File(fileName);
         }
 
-        String absolutePath = file.getAbsolutePath();
-        System.out.println("Uploading file from resolved path: " + absolutePath);
+        WebElement fileInput = wait.until(ExpectedConditions.presenceOfElementLocated(FILE_INPUT));
+        fileInput.sendKeys(file.getAbsolutePath());
 
-        // Find input file and send path keys
-        WebElement fileInput = driver.findElement(FILE_INPUT);
-        fileInput.sendKeys(absolutePath);
-
-        // Dispatch React change event via JS executor
-        System.out.println("Dispatching change event via JavaScript executor...");
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript(
                 "var input = document.getElementById('berkas');" +
                         "var event = new Event('change', { bubbles: true });" +
                         "input.dispatchEvent(event);");
 
-        // Brief sleep to let React state catch up
         try {
             Thread.sleep(1000);
         } catch (InterruptedException ignored) {
@@ -64,13 +58,42 @@ public class FormPengajuanPage extends BasePage {
     }
 
     public void submitForm() {
-        System.out.println("Clicking Submit form button...");
+        if (isElementPresentQuick(DIALOG_DESCRIPTION)) {
+            System.out.println("[Page Object] Pop-up error detected before submit. Skipping main submit click.");
+            return;
+        }
         clickElement(SUBMIT_BUTTON);
-
-        // Wait for page transition / success card loading
         try {
-            Thread.sleep(3000);
+            Thread.sleep(1000);
         } catch (InterruptedException ignored) {
+        }
+    }
+
+    public boolean isAlertTriangleDisplayed() {
+        return isElementDisplayed(ALERT_TRIANGLE_ICON);
+    }
+
+    public String getDialogErrorMessage() {
+        try {
+            WebElement msgElement = wait.until(ExpectedConditions.visibilityOfElementLocated(DIALOG_DESCRIPTION));
+            String errorText = msgElement.getText();
+
+            if (isElementPresentQuick(DIALOG_CLOSE_BUTTON)) {
+                clickElement(DIALOG_CLOSE_BUTTON);
+            }
+            return errorText;
+        } catch (Exception e) {
+            return "";
+        }
+    }
+    public boolean isJudulHtml5Invalid() {
+        try {
+            WebElement judulInput = wait.until(ExpectedConditions.presenceOfElementLocated(JUDUL_INPUT));
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+
+            return (Boolean) js.executeScript("return arguments[0].validity.valueMissing;", judulInput);
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -78,10 +101,8 @@ public class FormPengajuanPage extends BasePage {
         try {
             waitForDocumentReady();
             WebElement successHeading = wait.until(ExpectedConditions.visibilityOfElementLocated(SUCCESS_HEADING));
-            System.out.println("Submission success confirmed: " + successHeading.getText());
             return successHeading.isDisplayed();
         } catch (Exception e) {
-            System.out.println("Failed to confirm form submission success: " + e.getMessage());
             return false;
         }
     }
