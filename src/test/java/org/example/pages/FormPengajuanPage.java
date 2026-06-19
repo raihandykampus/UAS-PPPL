@@ -1,9 +1,10 @@
 package org.example.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-
 import java.io.File;
 import static org.example.pages.locators.FormPengajuanLocators.*;
 
@@ -14,18 +15,22 @@ public class FormPengajuanPage extends BasePage {
     }
 
     public void navigateToFormPengajuan() {
-        System.out.println("Navigating to Form Pengajuan page...");
         clickElement(FORM_PENGAJUAN_MENU_LINK);
-
         wait.until(ExpectedConditions.urlContains("/form-pengajuan"));
-        System.out.println("Landed on Form Pengajuan page: " + getCurrentUrl());
     }
 
     public void fillJudul(String judulText) {
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(JUDUL_INPUT));
-        element.clear();
-        element.sendKeys(judulText);
-        System.out.println("Filled Judul Tugas Akhir: " + judulText);
+        element.click();
+        element.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        element.sendKeys(Keys.BACK_SPACE);
+
+        if (judulText != null && !judulText.isEmpty()) {
+            element.sendKeys(judulText);
+        } else {
+            element.sendKeys(" ");
+            element.sendKeys(Keys.BACK_SPACE);
+        }
     }
 
     public void uploadFile(String fileName) {
@@ -37,13 +42,10 @@ public class FormPengajuanPage extends BasePage {
             file = new File(fileName);
         }
 
-        String absolutePath = file.getAbsolutePath();
-        System.out.println("Uploading file from resolved path: " + absolutePath);
+        // PERBAIKAN: Tunggu sampai element input file berkas benar-benar ada di DOM sebelum disuntik path file
+        WebElement fileInput = wait.until(ExpectedConditions.presenceOfElementLocated(FILE_INPUT));
+        fileInput.sendKeys(file.getAbsolutePath());
 
-        WebElement fileInput = driver.findElement(FILE_INPUT);
-        fileInput.sendKeys(absolutePath);
-
-        System.out.println("Dispatching change event via JavaScript executor...");
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript(
                 "var input = document.getElementById('berkas');" +
@@ -57,12 +59,47 @@ public class FormPengajuanPage extends BasePage {
     }
 
     public void submitForm() {
-        System.out.println("Clicking Submit form button...");
+        // PERBAIKAN: Jika layar terblokir oleh Pop-up Radix, jangan klik submit utama karena pasti TimeoutException
+        if (isElementPresentQuick(DIALOG_DESCRIPTION)) {
+            System.out.println("[Page Object] Pop-up error detected before submit. Skipping main submit click.");
+            return;
+        }
         clickElement(SUBMIT_BUTTON);
-
         try {
-            Thread.sleep(3000);
+            Thread.sleep(1000);
         } catch (InterruptedException ignored) {
+        }
+    }
+
+    public boolean isAlertTriangleDisplayed() {
+        return isElementDisplayed(ALERT_TRIANGLE_ICON);
+    }
+
+    // Fungsi baru untuk mengambil isi teks dari Pop-up Radix UI
+    public String getDialogErrorMessage() {
+        try {
+            WebElement msgElement = wait.until(ExpectedConditions.visibilityOfElementLocated(DIALOG_DESCRIPTION));
+            String errorText = msgElement.getText();
+
+            // Klik tombol 'Kembali' atau 'X' untuk membersihkan dialog agar tidak mengganggu test case selanjutnya
+            if (isElementPresentQuick(DIALOG_CLOSE_BUTTON)) {
+                clickElement(DIALOG_CLOSE_BUTTON);
+            }
+            return errorText;
+        } catch (Exception e) {
+            return "";
+        }
+    }
+    // Tambahkan method ini di dalam FormPengajuanPage.java
+    public boolean isJudulHtml5Invalid() {
+        try {
+            WebElement judulInput = wait.until(ExpectedConditions.presenceOfElementLocated(JUDUL_INPUT));
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+
+            // Mengembalikan 'true' jika browser mendeteksi bahwa field required ini kosong saat disubmit
+            return (Boolean) js.executeScript("return arguments[0].validity.valueMissing;", judulInput);
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -70,10 +107,8 @@ public class FormPengajuanPage extends BasePage {
         try {
             waitForDocumentReady();
             WebElement successHeading = wait.until(ExpectedConditions.visibilityOfElementLocated(SUCCESS_HEADING));
-            System.out.println("Submission success confirmed: " + successHeading.getText());
             return successHeading.isDisplayed();
         } catch (Exception e) {
-            System.out.println("Failed to confirm form submission success: " + e.getMessage());
             return false;
         }
     }
