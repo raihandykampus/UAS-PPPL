@@ -12,7 +12,7 @@ Test Case yang ada:
 1. Autentikasi (Login/logout) & Google SSO: Oleh Abdullah Afif
 2. Form Pengajuan Sidang: Oleh Raihan Esfandyka
 3. Manajemen Pengaturan Profil: Oleh Abdullah Afif
-4. Manajemen : Oleh
+4. Admin Pengajuan Sidang : Oleh Brilian Fatih Wicaksono
 5. Manajemen : Oleh
 
 ## Arsitektur
